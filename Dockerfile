@@ -52,6 +52,8 @@ RUN sed -i 's#"/var/www/localhost/htdocs"#"/var/www/html"#g' /etc/apache2/httpd.
     sed -i 's|ErrorLog .*|ErrorLog /dev/stderr|g' /etc/apache2/httpd.conf && \
     sed -i 's|CustomLog .* combined|CustomLog /dev/stdout combined|g' /etc/apache2/httpd.conf && \
     sed -i 's|TransferLog .*|TransferLog /dev/stdout|g' /etc/apache2/httpd.conf && \
+    sed -i 's|^PidFile .*|PidFile /tmp/httpd.pid|g' /etc/apache2/conf.d/mpm.conf 2>/dev/null; \
+    grep -q 'PidFile' /etc/apache2/httpd.conf && sed -i 's|^PidFile .*|PidFile /tmp/httpd.pid|g' /etc/apache2/httpd.conf || echo 'PidFile /tmp/httpd.pid' >> /etc/apache2/httpd.conf && \
     mkdir -p /var/www/html /run/apache2 /database && \
     chown -R apache:apache /var/www/html /run/apache2 /speedtest /database
 
