@@ -49,8 +49,11 @@ RUN chmod +x /entrypoint.sh
 # - Make all runtime-writable dirs owned by apache user
 RUN sed -i 's#"/var/www/localhost/htdocs"#"/var/www/html"#g' /etc/apache2/httpd.conf && \
     sed -i 's/^Listen 80$/Listen 8080/g' /etc/apache2/httpd.conf && \
-    mkdir -p /var/www/html /run/apache2 /database && \
-    chown -R apache:apache /var/www/html /run/apache2 /speedtest /database /var/log/apache2
+    sed -i 's#/var/www/logs#/var/log/apache2#g' /etc/apache2/httpd.conf && \
+    mkdir -p /var/www/html /run/apache2 /database /var/www/logs && \
+    ln -sf /dev/stdout /var/www/logs/access.log && \
+    ln -sf /dev/stderr /var/www/logs/error.log && \
+    chown -R apache:apache /var/www/html /run/apache2 /speedtest /database /var/log/apache2 /var/www/logs
 
 ENV TITLE=LibreSpeed \
     MODE=standalone \
